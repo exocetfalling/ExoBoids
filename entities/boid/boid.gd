@@ -11,8 +11,9 @@ var flock_mean_position: Vector3 = Vector3.ZERO
 var flock_num_birds: int = 1
 
 var boid_visual_range: float = 20.0
-var boid_avoidance_vector: Vector3 = Vector3.ZERO
+var boid_separation_vector: Vector3 = Vector3.ZERO
 var boid_cohesion_vector: Vector3 = Vector3.ZERO
+var boid_alignment_vector: Vector3 = Vector3.ZERO
 var boid_target_vector: Vector3 = Vector3.ZERO
 var boid_random_vector: Vector3 = Vector3.ZERO
 var boid_station_vector: Vector3 = Vector3.ZERO
@@ -25,8 +26,9 @@ var boid_speed_scalar: float = 2.0
 var elapsed_time: float = 0.0
 
 # Exports
-export var COEFF_AVOIDANCE: float = -0.015
+export var COEFF_SEPARATION: float = -0.015
 export var COEFF_COHESION: float = 1.1
+export var COEFF_ALIGNMENT: float = 1.0
 export var COEFF_STATION: float = -0.008
 export var COEFF_INPUT: float = 2
 export var COEFF_RANDOM: float = 0.75
@@ -45,14 +47,14 @@ func _ready():
 func _physics_process(delta):
 	elapsed_time += delta
 	
-	boid_avoidance_vector = Vector3.ZERO
+	boid_separation_vector = Vector3.ZERO
 	
 	for body in $SensedArea.get_overlapping_bodies():
 		flock_mean_velocity += body.linear_velocity
 		flock_mean_position += body.global_translation
 		
-		boid_avoidance_vector += \
-			COEFF_AVOIDANCE * \
+		boid_separation_vector += \
+			COEFF_SEPARATION * \
 			(body.global_translation - global_translation) * \
 			(boid_visual_range - (body.global_translation - global_translation).length())
 	
@@ -61,6 +63,8 @@ func _physics_process(delta):
 	flock_mean_position = flock_mean_position / flock_num_birds
 	
 	boid_cohesion_vector = COEFF_COHESION * (flock_mean_position - global_translation)
+	
+	boid_alignment_vector = COEFF_ALIGNMENT * flock_mean_velocity
 	
 	# Get input
 	input_vector = COEFF_INPUT * boid_speed_scalar * Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -96,9 +100,9 @@ func _physics_process(delta):
 func _integrate_forces(delta):
 	linear_velocity = lerp(\
 		linear_velocity, \
-		flock_mean_velocity + \
-		boid_avoidance_vector + \
+		boid_separation_vector + \
 		boid_cohesion_vector + \
+		boid_alignment_vector + \
 		boid_target_vector + \
 		boid_random_vector + \
 		boid_station_vector, \
