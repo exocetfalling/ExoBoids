@@ -19,7 +19,10 @@ func _ready():
 		instance.global_translation.x = rand_range(-30, 30)
 		instance.global_translation.y = rand_range(-30, 30)
 		instance.global_translation.z = rand_range(-30, 30)
-
+		
+		# Initial velocity/orientation towards origin
+		instance.linear_velocity = -global_translation.normalized()
+		instance.look_at(Vector3.ZERO, Vector3.UP)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
