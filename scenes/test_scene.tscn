@@ -5,7 +5,7 @@
 
 [node name="TestScene" type="Spatial"]
 script = ExtResource( 2 )
-num_boids_total = 128
+num_boids_total = 64
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 30 )

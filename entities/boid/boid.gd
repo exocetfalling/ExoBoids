@@ -25,8 +25,8 @@ var boid_speed_scalar: float = 2.0
 var elapsed_time: float = 0.0
 
 # Exports
-export var COEFF_AVOIDANCE: float = -0.01
-export var COEFF_COHESION: float = 1.2
+export var COEFF_AVOIDANCE: float = -0.015
+export var COEFF_COHESION: float = 1.1
 export var COEFF_STATION: float = -0.008
 export var COEFF_INPUT: float = 2
 
