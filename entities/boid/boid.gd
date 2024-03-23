@@ -15,11 +15,21 @@ var boid_avoidance_vector: Vector3 = Vector3.ZERO
 var boid_cohesion_vector: Vector3 = Vector3.ZERO
 var boid_target_vector: Vector3 = Vector3.ZERO
 var boid_random_vector: Vector3 = Vector3.ZERO
+var boid_station_vector: Vector3 = Vector3.ZERO
 
 var input_vector: Vector2 = Vector2.ZERO
 
 var boid_randomness_period: float = 5.0
+var boid_speed_scalar: float = 2.0
+
 var elapsed_time: float = 0.0
+
+# Exports
+export var COEFF_AVOIDANCE: float = -0.01
+export var COEFF_COHESION: float = 1.2
+export var COEFF_STATION: float = -0.008
+export var COEFF_INPUT: float = 2
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -41,7 +51,7 @@ func _physics_process(delta):
 		flock_mean_position += body.global_translation
 		
 		boid_avoidance_vector += \
-			-0.01 * \
+			COEFF_AVOIDANCE * \
 			(body.global_translation - global_translation) * \
 			(boid_visual_range - (body.global_translation - global_translation).length())
 	
@@ -49,14 +59,17 @@ func _physics_process(delta):
 	flock_mean_velocity = flock_mean_velocity / flock_num_birds
 	flock_mean_position = flock_mean_position / flock_num_birds
 	
-	boid_cohesion_vector = 1 * (flock_mean_position - global_translation)
+	boid_cohesion_vector = COEFF_COHESION * (flock_mean_position - global_translation)
 	
 	# Get input
-	input_vector = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	input_vector = COEFF_INPUT * boid_speed_scalar * Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	
 	# Set target vector with input
 	boid_target_vector.x = input_vector.x
 	boid_target_vector.z = input_vector.y
+	
+	# Make boids stay close to origin
+	boid_station_vector = COEFF_STATION * boid_speed_scalar * global_translation
 	
 	if elapsed_time > boid_randomness_period:
 		# Reset time 
@@ -65,11 +78,16 @@ func _physics_process(delta):
 		# Set new period
 		boid_randomness_period = rand_range(2, 5)
 		
+		# Set new speed
+		boid_speed_scalar = rand_range(2, 5)
+		
 		# Set random vector
-		boid_random_vector.x = rand_range(-1, 1)
-		boid_random_vector.y = 0
-		boid_random_vector.z = rand_range(-1, 1)
+		boid_random_vector.x = boid_speed_scalar * rand_range(-1, 1)
+		boid_random_vector.y = boid_speed_scalar * rand_range(-1, 1)
+		boid_random_vector.z = boid_speed_scalar * rand_range(-1, 1)
 	
+	# Debug
+#	$CSGCylinder.scale = flock_num_birds / 4 * Vector3.ONE
 
 
 func _integrate_forces(delta):
@@ -79,7 +97,8 @@ func _integrate_forces(delta):
 		boid_avoidance_vector + \
 		boid_cohesion_vector + \
 		boid_target_vector + \
-		boid_random_vector, \
+		boid_random_vector + \
+		boid_station_vector, \
 		0.02)
 	look_at(global_translation + linear_velocity, Vector3.UP)
 
