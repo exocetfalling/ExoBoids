@@ -14,7 +14,7 @@ emission_operator = 0
 emission_on_uv2 = false
 
 [sub_resource type="SphereShape" id=2]
-radius = 8.0
+radius = 10.0
 
 [node name="Boid" type="RigidBody"]
 gravity_scale = 0.0

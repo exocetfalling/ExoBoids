@@ -29,6 +29,7 @@ export var COEFF_AVOIDANCE: float = -0.015
 export var COEFF_COHESION: float = 1.1
 export var COEFF_STATION: float = -0.008
 export var COEFF_INPUT: float = 2
+export var COEFF_RANDOM: float = 0.75
 
 
 # Called when the node enters the scene tree for the first time.
@@ -85,6 +86,8 @@ func _physics_process(delta):
 		boid_random_vector.x = boid_speed_scalar * rand_range(-1, 1)
 		boid_random_vector.y = boid_speed_scalar * rand_range(-1, 1)
 		boid_random_vector.z = boid_speed_scalar * rand_range(-1, 1)
+		
+		boid_random_vector = COEFF_RANDOM * boid_random_vector
 	
 	# Debug
 #	$CSGCylinder.scale = flock_num_birds / 4 * Vector3.ONE
