@@ -84,7 +84,7 @@ func _physics_process(delta):
 		boid_randomness_period = rand_range(2, 5)
 		
 		# Set new speed
-		boid_speed_scalar = rand_range(3, 6)
+		boid_speed_scalar = rand_range(2, 5)
 		
 		# Set random vector
 		boid_random_vector.x = boid_speed_scalar * rand_range(-1, 1)
