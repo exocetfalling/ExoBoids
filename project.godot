@@ -6,28 +6,19 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "RigidBody",
-"class": "Boid",
-"language": "GDScript",
-"path": "res://entities/boid/boid.gd"
-} ]
-_global_script_class_icons={
-"Boid": ""
-}
+config_version=5
 
 [application]
 
 config/name="ExoBoids"
 run/main_scene="res://scenes/test_scene.tscn"
+config/features=PackedStringArray("4.3")
 config/icon="res://icon.png"
 
 [display]
 
-window/size/width=1920
-window/size/height=1080
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/size/fullscreen=true
 
 [gui]
@@ -40,5 +31,5 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+environment/defaults/default_environment="res://default_env.tres"
 quality/filters/use_fxaa=true
-environment/default_environment="res://default_env.tres"
