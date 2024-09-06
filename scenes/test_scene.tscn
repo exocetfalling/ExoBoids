@@ -5,6 +5,8 @@
 
 [node name="TestScene" type="Node3D"]
 script = ExtResource("2")
+num_boids_total = 256
+boid_batch_size = 128
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 30)
