@@ -1,10 +1,12 @@
 class_name Boid 
 
-extends RigidBody3D
+extends CharacterBody3D
 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
+var boid_index: int = 0
+
 var flock_mean_velocity: Vector3 = Vector3.ZERO
 var flock_mean_position: Vector3 = Vector3.ZERO
 
@@ -20,10 +22,10 @@ var boid_station_vector: Vector3 = Vector3.ZERO
 
 var input_vector: Vector2 = Vector2.ZERO
 
-var boid_randomness_period: float = 5.0
+var boid_motion_period: float = 5.0
 var boid_speed_scalar: float = 2.0
 
-var elapsed_time: float = 0.0
+var elapsed_time_period: float = 0.0
 
 # Exports
 @export var COEFF_SEPARATION: float = -0.015
@@ -42,15 +44,13 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
-
-
-func _physics_process(delta):
-	elapsed_time += delta
+func flock_logic(delta):
+	elapsed_time_period += delta
 	
 	boid_separation_vector = Vector3.ZERO
 	
 	for body in $SensedArea.get_overlapping_bodies():
-		flock_mean_velocity += body.linear_velocity
+		flock_mean_velocity += body.velocity
 		flock_mean_position += body.global_position
 		
 		boid_separation_vector += \
@@ -76,12 +76,25 @@ func _physics_process(delta):
 	# Make boids stay close to origin
 	boid_station_vector = COEFF_STATION * boid_speed_scalar * global_position
 	
-	if elapsed_time > boid_randomness_period:
+	velocity = lerp(\
+		velocity, \
+		boid_separation_vector + \
+		boid_cohesion_vector + \
+		boid_alignment_vector + \
+		boid_target_vector + \
+		boid_random_vector + \
+		boid_station_vector, \
+		0.02)
+	look_at(global_position + velocity, Vector3.UP)
+	
+	move_and_collide(velocity * delta)
+	
+	if elapsed_time_period > boid_motion_period:
 		# Reset time 
-		elapsed_time = 0
+		elapsed_time_period = 0
 		
 		# Set new period
-		boid_randomness_period = randf_range(2, 5)
+		boid_motion_period = randf_range(2, 5)
 		
 		# Set new speed
 		boid_speed_scalar = randf_range(2, 5)
@@ -96,15 +109,5 @@ func _physics_process(delta):
 	# Debug
 #	$CSGCylinder.scale = flock_num_birds / 4 * Vector3.ONE
 
-
-func _integrate_forces(delta):
-	linear_velocity = lerp(\
-		linear_velocity, \
-		boid_separation_vector + \
-		boid_cohesion_vector + \
-		boid_alignment_vector + \
-		boid_target_vector + \
-		boid_random_vector + \
-		boid_station_vector, \
-		0.02)
-	look_at(global_position + linear_velocity, Vector3.UP)
+func _physics_process(delta):
+	pass
