@@ -16,6 +16,7 @@ radius = 8.0
 
 [node name="Boid" type="CharacterBody3D"]
 script = ExtResource("1")
+COEFF_STATION = -0.012
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("1")

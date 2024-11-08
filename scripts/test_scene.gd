@@ -14,6 +14,7 @@ var boid_batch_num: int = 1
 
 var boid_batch_index_min: int = 0
 var boid_batch_index_max: int = 15
+var timestep_factor: float = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -36,6 +37,8 @@ func _ready():
 func _physics_process(delta):
 	elapsed_time_total += delta
 	
+	timestep_factor = num_boids_total / boid_batch_size
+	
 	if boid_batch_index_min > num_boids_total:
 		boid_batch_num = 1
 		boid_batch_index_min = 1
@@ -44,7 +47,7 @@ func _physics_process(delta):
 	for child in get_children():
 		if child is Boid:
 			if child.boid_index >= boid_batch_index_min and child.boid_index < boid_batch_index_max:
-				child.flock_logic(delta)
+				child.flock_logic(delta * timestep_factor)
 	
 	boid_batch_num += 1
 	boid_batch_index_min += boid_batch_size
