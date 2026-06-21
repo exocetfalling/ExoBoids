@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://lc5o1pykm7fh"]
+[gd_scene format=3 uid="uid://lc5o1pykm7fh"]
 
 [ext_resource type="Script" uid="uid://74psxccexdce" path="res://entities/boid/boid.gd" id="1"]
 
@@ -14,21 +14,21 @@ emission_energy_multiplier = 0.15
 [sub_resource type="SphereShape3D" id="2"]
 radius = 8.0
 
-[node name="Boid" type="CharacterBody3D"]
+[node name="Boid" type="CharacterBody3D" unique_id=2049802761]
 script = ExtResource("1")
 COEFF_STATION = -0.015
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1758677045]
 shape = SubResource("1")
 
-[node name="BoidMesh" type="CSGCylinder3D" parent="."]
+[node name="BoidMesh" type="CSGCylinder3D" parent="." unique_id=1546232229]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 radius = 0.25
 sides = 16
 cone = true
 material = SubResource("3")
 
-[node name="SensedArea" type="Area3D" parent="."]
+[node name="SensedArea" type="Area3D" parent="." unique_id=313461638]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SensedArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SensedArea" unique_id=457081678]
 shape = SubResource("2")
