@@ -10,6 +10,7 @@ var boid = preload("res://entities/boid/boid.tscn")
 var elapsed_time_total: float = 0
 
 var boid_batch_num: int = 1
+@export var batching_enable: bool = false
 @export var boid_batch_size: int = 32
 
 var boid_batch_index_min: int = 0
@@ -39,15 +40,21 @@ func _physics_process(delta):
 	
 	timestep_factor = num_boids_total / boid_batch_size
 	
-	if boid_batch_index_min > num_boids_total:
-		boid_batch_num = 1
-		boid_batch_index_min = 1
-		boid_batch_index_max = boid_batch_index_min + boid_batch_size
+	if batching_enable:
+		if boid_batch_index_min > num_boids_total:
+			boid_batch_num = 1
+			boid_batch_index_min = 1
+			boid_batch_index_max = boid_batch_index_min + boid_batch_size
+		
+		for child in get_children():
+			if child is Boid:
+				if child.boid_index >= boid_batch_index_min and child.boid_index < boid_batch_index_max:
+					child.flock_logic(delta * timestep_factor)
 	
-	for child in get_children():
-		if child is Boid:
-			if child.boid_index >= boid_batch_index_min and child.boid_index < boid_batch_index_max:
-				child.flock_logic(delta * timestep_factor)
+	else:
+		for child in get_children():
+			if child is Boid:
+				child.flock_logic(delta)
 	
 	boid_batch_num += 1
 	boid_batch_index_min += boid_batch_size

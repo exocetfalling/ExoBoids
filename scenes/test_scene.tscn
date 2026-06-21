@@ -1,22 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://biyevjnsj5xrt"]
+[gd_scene format=3 uid="uid://biyevjnsj5xrt"]
 
 [ext_resource type="Environment" uid="uid://d252jb4pnduti" path="res://test_scene_env.tres" id="1"]
 [ext_resource type="Script" uid="uid://h606a5q8lfvt" path="res://scripts/test_scene.gd" id="2"]
 
-[node name="TestScene" type="Node3D"]
+[node name="TestScene" type="Node3D" unique_id=1748960605]
 script = ExtResource("2")
 num_boids_total = 128
 boid_batch_size = 64
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=322230841]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 30)
 current = true
 
-[node name="CameraDebug" type="Camera3D" parent="."]
+[node name="CameraDebug" type="Camera3D" parent="." unique_id=1227839164]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 100, 0)
 projection = 1
 size = 100.0
 far = 200.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1694263357]
 environment = ExtResource("1")
